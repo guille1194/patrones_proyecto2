@@ -1,8 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.views.generic import TemplateView, FormView, CreateView, ListView, UpdateView, DetailView
-from .forms import  ContactForm, RegistroCursoForm, ProfesionistaForm, PacienteForm, User_form, PostForm
 from django.core.urlresolvers import reverse_lazy
-from .models import Curso, Profesionista, Paciente, Post, Categoria
+from .models import Usuario, Pregunta_Opcion, Opcion_Pregunta, Respuesta, Respuesta_Opcion, Categoria
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
