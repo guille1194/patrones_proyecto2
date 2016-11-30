@@ -39,9 +39,8 @@ class Categoria(models.Model):
 		return self.nombre
 
 
-class Pregunta(models.Model):
-	ID_Pregunta = models.AutoField(primary_key=True)
-	tipo = models.BooleanField(default=False)
+class Pregunta_Opcion(models.Model):
+	ID_Pregunta_Opcion = models.AutoField(primary_key=True)
 	pregunta = models.CharField(max_length=100)
 	categoria = models.ForeignKey(Categoria)
 	fecha_creacion = models.DateField(default=datetime.date.today)
@@ -65,7 +64,7 @@ class Pregunta(models.Model):
 		return not self.set_voto.filter(user=Usuario).exists()"""
 
 	def __unicode__(self):
-		return '%s'%(self.ID_Pregunta)
+		return '%s'%(self.ID_Pregunta_Opcion)
 
 	def __str__(self):
 		return self.pregunta
@@ -74,16 +73,32 @@ class Opcion_Pregunta(models.Model):
 	ID_Opcion_Pregunta = models.AutoField(primary_key=True)
 	opcion = models.CharField(max_length=100)
 	descripcion = models.CharField(max_length=200, blank=True, null=True)
-	ID_Pregunta = models.ForeignKey(Pregunta)
+	ID_Pregunta_Opcion = models.ForeignKey(Pregunta_Opcion)
 
 	def __str__(self):
 		return self.opcion
+
+class Pregunta_Abierta(models.Model):
+	ID_Pregunta_Abierta = models.AutoField(primary_key=True)
+	pregunta = models.CharField(max_length=100)
+	categoria = models.ForeignKey(Categoria)
+	fecha_creacion = models.DateField(default=datetime.date.today)
+	publicado = models.BooleanField(default=True)
+	ID_Usuario = models.ForeignKey(Usuario)
+
+	def __str__(self):
+		return self.pregunta
+
+"""class Pregunta(models.Model):
+	ID_Pregunta = models.AutoField(primary_key=True)
+	ID_Pregunta_Opcion = models.ForeignKey(Pregunta_Opcion)
+	ID_Pregunta_Abierta = models.ForeignKey(Pregunta_Abierta)"""
 
 class Respuesta(models.Model):
 	ID_Respuesta = models.AutoField(primary_key=True)
 	respuesta = models.CharField(max_length=200)
 	ID_Usuario = models.ForeignKey(Usuario)
-	ID_Pregunta = models.ForeignKey(Pregunta)
+	ID_Pregunta_Abierta = models.ForeignKey(Pregunta_Abierta)
 
 	"""def contar_votos(self):
 		return self.set_voto.count()"""
@@ -96,11 +111,14 @@ class Respuesta(models.Model):
 
 class Respuesta_Opcion(models.Model):
 	ID_Respuesta_Opcion = models.AutoField(primary_key=True)
+	ID_Pregunta_Opcion = models.ForeignKey(Pregunta_Opcion)
 	ID_Opcion_Pregunta = models.ForeignKey(Opcion_Pregunta)
-	ID_Respuesta = models.ForeignKey(Respuesta)
 
 	def __unicode__(self):
 		return u'Voto para %s' % (self.respuesta)
+
+	def __str__(self):
+		return self.ID_Respuesta_Opcion
 
 	"""class Meta:
 		unique_together = ('Usuario', 'Pregunta')"""

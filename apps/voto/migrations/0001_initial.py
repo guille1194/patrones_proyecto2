@@ -26,16 +26,23 @@ class Migration(migrations.Migration):
             fields=[
                 ('ID_Opcion_Pregunta', models.AutoField(serialize=False, primary_key=True)),
                 ('opcion', models.CharField(max_length=100)),
-                ('descripcion', models.CharField(max_length=200)),
+                ('descripcion', models.CharField(max_length=200, null=True, blank=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Pregunta',
+            name='Pregunta_Abierta',
             fields=[
-                ('ID_Pregunta', models.AutoField(serialize=False, primary_key=True)),
-                ('tipo', models.BooleanField(default=False)),
+                ('ID_Pregunta_Abierta', models.AutoField(serialize=False, primary_key=True)),
                 ('pregunta', models.CharField(max_length=100)),
-                ('categoria', models.CharField(max_length=64)),
+                ('fecha_creacion', models.DateField(default=datetime.date.today)),
+                ('publicado', models.BooleanField(default=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Pregunta_Opcion',
+            fields=[
+                ('ID_Pregunta_Opcion', models.AutoField(serialize=False, primary_key=True)),
+                ('pregunta', models.CharField(max_length=100)),
                 ('fecha_creacion', models.DateField(default=datetime.date.today)),
                 ('publicado', models.BooleanField(default=True)),
             ],
@@ -48,7 +55,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('ID_Respuesta', models.AutoField(serialize=False, primary_key=True)),
                 ('respuesta', models.CharField(max_length=200)),
-                ('ID_Pregunta', models.ForeignKey(to='voto.Pregunta')),
+                ('ID_Pregunta_Abierta', models.ForeignKey(to='voto.Pregunta_Abierta')),
             ],
         ),
         migrations.CreateModel(
@@ -56,7 +63,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('ID_Respuesta_Opcion', models.AutoField(serialize=False, primary_key=True)),
                 ('ID_Opcion_Pregunta', models.ForeignKey(to='voto.Opcion_Pregunta')),
-                ('ID_Respuesta', models.ForeignKey(to='voto.Respuesta')),
+                ('ID_Pregunta_Opcion', models.ForeignKey(to='voto.Pregunta_Opcion')),
             ],
         ),
         migrations.CreateModel(
@@ -75,13 +82,28 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(to='voto.Usuario'),
         ),
         migrations.AddField(
-            model_name='pregunta',
+            model_name='pregunta_opcion',
             name='ID_Usuario',
             field=models.ForeignKey(to='voto.Usuario'),
         ),
         migrations.AddField(
+            model_name='pregunta_opcion',
+            name='categoria',
+            field=models.ForeignKey(to='voto.Categoria'),
+        ),
+        migrations.AddField(
+            model_name='pregunta_abierta',
+            name='ID_Usuario',
+            field=models.ForeignKey(to='voto.Usuario'),
+        ),
+        migrations.AddField(
+            model_name='pregunta_abierta',
+            name='categoria',
+            field=models.ForeignKey(to='voto.Categoria'),
+        ),
+        migrations.AddField(
             model_name='opcion_pregunta',
-            name='ID_Pregunta',
-            field=models.ForeignKey(to='voto.Pregunta'),
+            name='ID_Pregunta_Opcion',
+            field=models.ForeignKey(to='voto.Pregunta_Opcion'),
         ),
     ]
