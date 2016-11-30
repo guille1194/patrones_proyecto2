@@ -10,6 +10,7 @@ from django.contrib.auth.models import User, Permission
 from django.utils import timezone
 from datetime import datetime, date
 from django import forms
+from itertools import chain
 # Create your views here.
 
 
@@ -57,14 +58,18 @@ def pregunta_detalle(request, id=None):
     pregunta = get_object_or_404(Pregunta, ID_Pregunta=id)
     context = {
         "object_list":"eee"
-        "encuesta": encuesta,
+        "pregunta": pregunta,
     }
     return render(request, "voto/pregunta_detalle.html", context)
 
 def pregunta_lista(request):
-    queryset_list = Pregunta_Opcion.objects.all().order_by('-fecha_creacion')
-    queryset_list = Pregunta_Abierta.objects.all().order_by('-fecha_creacion')
+    queryset1 = Pregunta_Opcion.objects.all()
+    queryset2 = Pregunta_Abierta.objects.all()
     paginator = paginator(queryset_list, 3)
+
+result_list = sorted(
+    chain(queryset1, queryset2),
+    key=attrgetter('-fecha_creacion'))
 
     page = request.GET.get('page')
     try:
